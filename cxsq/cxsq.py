@@ -98,7 +98,7 @@ def cxsq(session: Session, date: datetime.date):
             raise Exception('Failed to get getCxsq')
         logging.debug('response.status_code:' + str(response.status_code))
         logging.debug('response.text:' + response.text)
-        cxsq = json.loads(response.text)
+        cxsq = response.json()
         if not cxsq['isSuccess']:
             logging.error('response: ' + str(cxsq))
             raise Exception('Failed to get getCxsq')
@@ -125,7 +125,7 @@ def cxsq(session: Session, date: datetime.date):
         if not response.ok:
             raise Exception('Failed to post saveCxsq')
         logging.debug(response.text)
-        cxsq = json.loads(response.text)
+        cxsq = response.json()
         if not cxsq['isSuccess']:
             raise Exception(cxsq['msg'])
     except Exception as e:
