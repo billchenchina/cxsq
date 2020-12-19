@@ -5,7 +5,7 @@ import logging
 import traceback
 from typing import Tuple
 
-import hit
+from hit.ids import idslogin
 import requests
 import yaml
 from requests import Session
@@ -31,7 +31,7 @@ def get_xg_session(username: str, password: str) -> Session:
     # hit.ids.login()
     logging.info('Logging in to xg.hit.edu.cn')
     try:
-        session = hit.ids.idslogin(username, password)
+        session = idslogin(username, password)
         session.get('https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/shsj/common')
         return session
     except Exception as e:
