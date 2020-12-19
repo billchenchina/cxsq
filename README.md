@@ -1,16 +1,18 @@
 # 学工平台出校申请
 
-本项目为使用命令行提交哈尔滨工业大学[学工平台](https://xg.hit.edu.cn/)[出入校申请](https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xsCxsq)的工具. 实现了按照配置文件登录, 申请出校的功能.
+本项目为使用命令行提交哈尔滨工业大学[学工平台](https://xg.hit.edu.cn/)[出入校申请](https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xsCxsq)的工具。实现了按照配置文件登录，申请出校的功能。
 
 ## 如何使用
 
 1. `pip install cxsq`
 2. 按照下面模板填写账号密码等信息
-3. 运行 `cxsq -c config_file [-d date1 date2 ... | -T | -t]
+3. 运行 `cxsq -c config_file [-d date1 date2 ... | -T | -t]`
 
 ## 出校日期参数
-参数可多选, 添加多个日期
-- `-d date ...` 申请指定日期的临时出校, `date` 格式为 `yyyyMMdd`
+
+参数可多选，添加多个日期
+
+- `-d date ...` 申请指定日期的临时出校，`date` 格式为 `yyyyMMdd`
 - `-t` 申请今日出校
 - `-T` 申请明日出校
 
