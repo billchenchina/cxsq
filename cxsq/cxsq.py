@@ -4,6 +4,7 @@ import json
 import logging
 import traceback
 from typing import Tuple
+from random import choice
 
 from hit.ids import idslogin
 import requests
@@ -17,13 +18,25 @@ def read_config(filename: str) -> Tuple[str, str]:
     try:
         logging.info("Reading config from %s", filename)
         o = open(filename, 'r')
-        c = yaml.load(o, Loader=yaml.SafeLoader)
-        ret = (c['username'], c['password'])
+        c: dict = yaml.load(o, Loader=yaml.SafeLoader)
+        username = c['username']
+        password = c['password']
+        reasons = c.get('reasons', [' '])
+
+        if not isinstance(reasons, list):
+            raise TypeError()
+        for reason in reasons:
+            if not isinstance(reason, str):
+                raise TypeError()
+
+        ret = (username, password, reasons)
         return ret
     except OSError:
         logging.error('Fail to read configuration from %s', filename)
     except yaml.YAMLError:
         logging.error('Fail to parse YAML')
+    except TypeError:
+        logging.error('Wrong type in yaml')
     exit(1)
 
 
@@ -84,18 +97,18 @@ def main():
         logging.info('datelist: %s', datelist)
     except ValueError as e:
         parser.error('wrong date format, format is yyyyMMdd')
-    username, password = read_config(args.conf_file)
+    username, password, reasons = read_config(args.conf_file)
     session = get_xg_session(username, password)
     date: datetime.date
     for date in datelist:
         try:
             logging.info('cxsq on %s', date.isoformat())
-            cxsq(session, date)
+            cxsq(session, date, choice(reasons))
         except Exception as e:
             logging.error('error: %s', e)
 
 
-def cxsq(session: Session, date: datetime.date):
+def cxsq(session: Session, date: datetime.date, reason: str):
     try:
         response = session.post(
             'https://xg.hit.edu.cn/zhxy-xgzs/xg_mobile/xsCxsq/getCxsq',
@@ -116,7 +129,7 @@ def cxsq(session: Session, date: datetime.date):
 
         info = {
             'model': {
-                'rq': date.strftime('%Y-%-m-%-d'),
+                'rq': date.isoformat(),
                 'cxly': ' ',
                 'cxlx': '01',
                 'yjlxjsrq': '',
@@ -135,6 +148,7 @@ def cxsq(session: Session, date: datetime.date):
         cxsq = response.json()
         if not cxsq['isSuccess']:
             raise Exception(cxsq['msg'])
+        logging.info('successfully send cxsq, reason: %s', reason)
     except requests.RequestException as e:
         raise e
     except Exception as e:
