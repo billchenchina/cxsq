@@ -134,6 +134,11 @@ def cxsq(session: Session, date: datetime.date, reason: str):
                 'cxlx': '01',
                 'yjlxjsrq': '',
                 'id': _id,
+                'lsjcjg': '',
+                'lsbgcjyy': '',
+                'lsjcsj': '-undefined-undefined',
+                'lsljjkmys': '',
+                'lsdsjxcmys': '',
             }
         }
         body = {
